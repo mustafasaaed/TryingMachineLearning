@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-img = cv2.imread('Images\watch.jpg',cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('..\Images\watch.jpg',cv2.IMREAD_GRAYSCALE)
 
 # Open CV
 
@@ -11,7 +11,7 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 #Saveing the image
-cv2.imwrite('Images\grayImage.png', img)
+cv2.imwrite('..\Images\grayImage.png', img)
 
 #matlap
 
