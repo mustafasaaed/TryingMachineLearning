@@ -7,6 +7,7 @@ from sklearn import preprocessing, cross_validation, svm
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle
 
 style.use('ggplot')
 
@@ -31,13 +32,20 @@ X = X[:-forecast_out:]
 
 df.dropna(inplace=True)
 y = np.array(df['label'])
-y = np.array(df['label'])
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(
     X, y, test_size=0.2)
 
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
+with open('linerregression.pickle','wb') as f: 
+    pickle.dump(clf, f)
+
+pickle_in = open('linerregression.pickle', 'rb')
+clf = pickle.load(pickle_in)
+
+    
+
 accuracy = clf.score(X_test, y_test)
 
 
@@ -63,4 +71,4 @@ df['Forecast'].plot()
 plt.legend(loc=4)
 plt.xlabel('Date')
 plt.ylabel('Price')
-plt.show()	
+plt.show()
