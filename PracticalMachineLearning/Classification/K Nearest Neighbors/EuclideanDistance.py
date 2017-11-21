@@ -1,18 +1,9 @@
 from math import sqrt
 import numpy as np
-import matplotlib .pyplot as plt
-from matplotlib import style
 from collections import Counter
 import warnings
-
-style.use('fivethirtyeight')
-
-
-# euclidean_distance = sqrt(
-#   (plot1[0] - plot2[0]) ** 2 + (plot1[1] - plot2[1]) ** 2)
-
-dataset = {'K': [[1, 2], [2, 3], [3, 1]], 'r': [[6, 5], [7, 7], [8, 6]]}
-new_featues = [5, 7]
+import pandas as pd
+import random
 
 
 def K_nearest_neighbors(data, predict, K=3):
@@ -31,11 +22,34 @@ def K_nearest_neighbors(data, predict, K=3):
     return vote_result
 
 
-result = K_nearest_neighbors(dataset, new_featues, K=3)
-print(result)
+df = pd.read_csv('BreastCancerData.txt')
+df.replace('?', -99999, inplace=True)
+df.drop(['id'], 1, inplace=True)
+full_data = df.astype(float).values.tolist()
+random.shuffle(full_data)
 
-for i in dataset:
-    for ii in dataset[i]:
-        plt.scatter(ii[0], ii[1], s=100, color=i)
-plt.scatter(new_featues[0], new_featues[1], s=100, color = result)
-plt.show()
+test_size = 0.2
+train_set = {2: [], 4: []}
+test_set = {2: [], 4: []}
+
+train_data = full_data[:-int(test_size * len(full_data))]
+test_data = full_data[-int(test_size * len(full_data)):]
+
+
+for i in train_data:
+    train_set[i[-1]].append(i[:-1])
+
+for i in test_data:
+    test_set[i[-1]].append(i[:-1])
+
+correct = 0
+total = 0
+
+for group in test_set:
+    for data in test_set[group]:
+        vote = K_nearest_neighbors(train_set, data, K=5)
+        if group == vote:
+            correct += 1
+        total += 1
+
+print('accuracy:', correct / total)
